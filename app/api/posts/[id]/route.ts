@@ -9,6 +9,9 @@ export const GET = async (request: NextApiRequest, response: NextApiResponse) =>
     await connectToDatabase();
 
     const post = await Post.findById(id);
+    if (!post) {
+      return response.status(404).json({ error: "Post not found" });
+    }
 
     return response.status(200).json(post);
   } catch (err) {
@@ -22,9 +25,12 @@ export const DELETE = async (request: NextApiRequest, response: NextApiResponse)
   try {
     await connectToDatabase();
 
-    await Post.findByIdAndDelete(id);
+    const result = await Post.findByIdAndDelete(id);
+    if (!result) {
+      return response.status(404).json({ error: "Post not found to delete" });
+    }
 
-    return response.status(200).json({ error: "Post has been deleted" });
+    return response.status(200).json({ message: "Post has been deleted" });
   } catch (err) {
     return response.status(500).json({ error: "Database Error" });
   }
