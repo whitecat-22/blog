@@ -1,7 +1,9 @@
+"use client"
+
 import React, { useEffect, useState, FormEvent } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useUser, useSession, useAuth } from '@clerk/clerk-react';
 

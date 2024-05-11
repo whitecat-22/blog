@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 import { z } from 'zod';
 import styles from './page.module.css';
