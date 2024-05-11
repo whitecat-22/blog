@@ -6,12 +6,6 @@ import styles from './page.module.css';
 import Image from 'next/image';
 import Button from '@/components/Button/Button';
 
-// ページのメタデータ型定義
-export const metadata = {
-  title: "Contact Information | しろねこ lab | Dev Portfolio, Blog",
-  description: "Contact Page | web app/system developer しろねこ's portfolio && blog",
-};
-
 // フォームデータのバリデーションスキーム
 const formSchema = z.object({
   name: z.string().min(1, "Name is required."),
