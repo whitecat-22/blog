@@ -6,6 +6,25 @@ import User from "../database/models/user.model";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
 
+// Define the type for user creation parameters
+interface CreateUserParams {
+  clerkId: string;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  photo: string;
+}
+
+// Define the type for user update parameters
+interface UpdateUserParams {
+  clerkId: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  photo: string;
+}
+
 // CREATE
 export async function createUser(user: CreateUserParams) {
   try {
@@ -29,7 +48,7 @@ export async function getUserById(userId: string) {
     if (!user) {
       throw new Error("User not found");
     }
-    
+
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
     handleError(error);
@@ -77,6 +96,7 @@ export async function deleteUser(clerkId: string) {
   }
 }
 
+/*
 // USE CREDITS
 export async function updateCredits(userId: string, creditFee: number) {
   try {
@@ -97,3 +117,4 @@ export async function updateCredits(userId: string, creditFee: number) {
     handleError(error);
   }
 }
+*/

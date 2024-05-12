@@ -3,8 +3,11 @@
 import Link from "next/link";
 import React from "react";
 import styles from "./navbar.module.css";
-import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
-import { useUser, ClerkProvider } from '@clerk/clerk-react';
+import DarkModeToggle from "@/components/DarkModeToggle/DarkModeToggle";
+import { useUser } from '@clerk/clerk-react';
+import { useClerk } from "@clerk/clerk-react";
+import { useRouter } from 'next/navigation';
+import { ClerkProvider } from "@clerk/nextjs";
 
 const links = [
   {
@@ -40,27 +43,33 @@ const links = [
 ];
 
 const Navbar: React.FC = () => {
-  const { isSignedIn, signOut } = useUser();
+  const { isSignedIn } = useUser();
+  const { signOut } = useClerk();
+  const router = useRouter();
 
   return (
-    <div className={styles.container}>
-      <Link href="/" className={styles.logo}>
-        しろねこ lab
-      </Link>
-      <div className={styles.links}>
-        <DarkModeToggle />
-        {links.map((link) => (
-          <Link key={link.id} href={link.url} className={styles.link}>
-            {link.title}
+    <>
+      <ClerkProvider>
+        <div className={styles.container}>
+          <Link href="/" className={styles.logo}>
+            しろねこ lab
           </Link>
-        ))}
-        {isSignedIn&& (
-          <button className={styles.logout} onClick={signOut}>
-            Logout
-          </button>
-        )}
-      </div>
-    </div>
+          <div className={styles.links}>
+            <DarkModeToggle />
+            {links.map((link) => (
+              <Link key={link.id} href={link.url} className={styles.link}>
+                {link.title}
+              </Link>
+            ))}
+            {isSignedIn&& (
+              <button className={styles.logout} onClick={() => signOut(() => router.push("/"))}>
+                Logout
+              </button>
+            )}
+          </div>
+        </div>
+      </ClerkProvider>
+    </>
   );
 };
 

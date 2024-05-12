@@ -4,10 +4,8 @@ import type { Metadata } from "next";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import { Inter, Roboto, Poppins } from "next/font/google";
-import { ThemeProvider } from "@/context/ThemeContext";
-import AuthProvider from "@/components/AuthProvider/AuthProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import "./globals.css";
-
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,15 +22,13 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          <ThemeProvider>
-            <div className="container">
-              <Navbar />
-              {children}
-              <Footer />
-            </div>
-          </ThemeProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <div className="container">
+            <Navbar />
+            {children}
+            <Footer />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

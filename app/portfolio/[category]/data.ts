@@ -6,9 +6,7 @@ export interface Item {
 }
 
 export interface Items {
-  applications: Item[];
-  illustrations: Item[];
-  websites: Item[];
+  [category: string]: Item[];
 }
 
 export const items: Items = {

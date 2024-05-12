@@ -15,6 +15,10 @@ const formSchema = z.object({
 
 // Contactコンポーネントの定義
 const Contact: React.FC = () => {
+  type ZodErrorMap = {
+    [key: string]: string[];
+  };
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -27,10 +31,14 @@ const Contact: React.FC = () => {
 
     // バリデーションを試みる
     const result = formSchema.safeParse({ name, email, message });
-    if (!result.success) {
-      setErrors(result.error.formErrors.fieldErrors);
+    /*if (!result.success) {
+      const transformedErrors = {};
+      Object.entries(result.error.formErrors.fieldErrors).forEach(([key, value]) => {
+        transformedErrors[key] = value.map(error => error.message);
+      });
+      setErrors(transformedErrors);
       return; // バリデーションエラーがある場合はここで処理を停止
-    }
+    }*/
 
     setLoading(true);
     try {
@@ -78,7 +86,7 @@ const Contact: React.FC = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          {errors?.name && <p className={styles.error}>{errors.name[0]}</p>}
+          {/*errors?.name && <p className={styles.error}>{errors.name[0]}</p>*/}
           <input
             type="email"
             placeholder="Email"
@@ -86,7 +94,7 @@ const Contact: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {errors?.email && <p className={styles.error}>{errors.email[0]}</p>}
+          {/*errors?.email && <p className={styles.error}>{errors.email[0]}</p>*/}
           <textarea
             className={styles.textArea}
             placeholder="Message"
@@ -95,8 +103,9 @@ const Contact: React.FC = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           ></textarea>
-          {errors?.message && <p className={styles.error}>{errors.message[0]}</p>}
-          <Button url="#" text="Send" onClick={handleSubmit} />
+          {/*errors?.message && <p className={styles.error}>{errors.message[0]}</p>*/}
+          <Button url="#" text="Send" />
+          <button onClick={handleSubmit}>Send</button>
           {loading && <div>Loading...</div>}
         </form>
       </div>

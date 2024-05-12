@@ -1,19 +1,24 @@
 "use client";
 
+import React, { ReactNode } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import React, { useContext, useEffect, useState } from "react";
 
-const ThemeProvider = ({ children }) => {
-  const { theme } = useContext(ThemeContext);
-  const [mounted, setMounted] = useState(false);
+interface ThemeProviderProps {
+  children: ReactNode;
+}
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+type Mode = 'dark' | 'light';  // Define the type for theme modes
 
-  if (mounted) {
-    return <div className={theme}>{children}</div>;
-  }
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const [mode, setMode] = React.useState<Mode>("dark");
+
+  const toggle = () => {
+    setMode(prevMode => prevMode === "dark" ? "light" : "dark");
+  };
+
+  return (
+    <ThemeContext.Provider value={{ toggle, mode }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 };
-
-export default ThemeProvider;

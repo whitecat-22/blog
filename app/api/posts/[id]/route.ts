@@ -1,37 +1,33 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/utils/db";
 import Post from "@/models/Post";
 
-export const GET = async (request: NextApiRequest, response: NextApiResponse) => {
-  const { id } = request.query;
+export async function GET(request: NextRequest) {
+  const url = new URL(request.url);
+  const id = url.searchParams.get('id');
 
   try {
     await connectToDatabase();
 
     const post = await Post.findById(id);
-    if (!post) {
-      return response.status(404).json({ error: "Post not found" });
-    }
 
-    return response.status(200).json(post);
+    return NextResponse.json(JSON.stringify(post), { status: 200 });
   } catch (err) {
-    return response.status(500).json({ error: "Database Error" });
+    return NextResponse.json({ error: "Database Error" }, { status: 500 });
   }
 };
 
-export const DELETE = async (request: NextApiRequest, response: NextApiResponse) => {
-  const { id } = request.query;
+export async function DELETE(request: NextRequest) {
+  const url = new URL(request.url);
+  const id = url.searchParams.get('id');
 
   try {
     await connectToDatabase();
 
-    const result = await Post.findByIdAndDelete(id);
-    if (!result) {
-      return response.status(404).json({ error: "Post not found to delete" });
-    }
+    await Post.findByIdAndDelete(id);
 
-    return response.status(200).json({ message: "Post has been deleted" });
+    return NextResponse.json({ message: "Post has been deleted" }, { status: 200 });
   } catch (err) {
-    return response.status(500).json({ error: "Database Error" });
+    return NextResponse.json({ error: "Database Error" }, { status: 500 });
   }
 };

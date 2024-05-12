@@ -2,23 +2,9 @@ import React from "react";
 import styles from "./page.module.css";
 import Button from "@/components/Button/Button";
 import Image from "next/image";
-import { items } from "./data.ts";
+import { items, Item, Items } from "./data";
 import { notFound } from "next/navigation";
 
-// アイテムの型定義
-interface Item {
-  id: string;
-  title: string;
-  desc: string;
-  image: string;
-}
-
-// itemsデータの型定義（data.tsからインポートされる前提）
-interface Items {
-  [key: string]: Item[];
-}
-
-// パラメータの型定義
 interface Params {
   params: {
     category: string;
@@ -26,20 +12,19 @@ interface Params {
 }
 
 // カテゴリデータを取得する関数
-const getData = (cat: string): Item[] | undefined => {
-  const data = items[cat] as Item[];
-
-  if (data) {
-    return data;
+const getData = (category: string): Item[] => {
+  const data = items[category];
+  if (!data) {
+    notFound();
+    return [];
   }
-
-  return notFound();
+  return data;
 };
 
 // Categoryコンポーネントの定義
 const Category: React.FC<Params> = ({ params }) => {
   const data = getData(params.category);
-  if (!data) return <p>No data available.</p>;
+  if (!data.length) return <p>No data available.</p>;
 
   return (
     <div className={styles.container}>

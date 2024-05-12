@@ -6,6 +6,7 @@ import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useUser, useSession, useAuth } from '@clerk/clerk-react';
+import { ClerkProvider } from "@clerk/nextjs";
 
 const Dashboard: React.FC = () => {
   const { user } = useUser();
@@ -71,39 +72,43 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.posts}>
-        {isLoading
-          ? "Loading..."
-          : data?.map((post) => {(
-              <div className={styles.post} key={post._id}>
-                <div className={styles.imgContainer}>
-                  <Image src={post.img} alt={post.title} width={200} height={100} />
-                </div>
-                <h2 className={styles.postTitle}>{post.title}</h2>
-                <span
-                  className={styles.delete}
-                  onClick={() => handleDelete(post._id)}
-                >
-                  X
-                </span>
-              </div>
-            )})}
-      </div>
-      <form className={styles.new} onSubmit={handleSubmit}>
-        <h1>Add New Post</h1>
-        <input type="text" placeholder="Title" className={styles.input} />
-        <input type="text" placeholder="Desc" className={styles.input} />
-        <input type="text" placeholder="Image" className={styles.input} />
-        <textarea
-          placeholder="Content"
-          className={styles.textArea}
-          cols={30}
-          rows={10}
-        ></textarea>
-        <button className={styles.button}>Send</button>
-      </form>
-    </div>
+    <>
+      <ClerkProvider>
+        <div className={styles.container}>
+          <div className={styles.posts}>
+            {isLoading
+              ? "Loading..."
+              : data?.map((post: {_id: string, title: string, desc: string, img: string, content: string, username: string }) => {(
+                  <div className={styles.post} key={post._id}>
+                    <div className={styles.imgContainer}>
+                      <Image src={post.img} alt={post.title} width={200} height={100} />
+                    </div>
+                    <h2 className={styles.postTitle}>{post.title}</h2>
+                    <span
+                      className={styles.delete}
+                      onClick={() => handleDelete(post._id)}
+                    >
+                      X
+                    </span>
+                  </div>
+                )})}
+          </div>
+          <form className={styles.new} onSubmit={handleSubmit}>
+            <h1>Add New Post</h1>
+            <input type="text" placeholder="Title" className={styles.input} />
+            <input type="text" placeholder="Desc" className={styles.input} />
+            <input type="text" placeholder="Image" className={styles.input} />
+            <textarea
+              placeholder="Content"
+              className={styles.textArea}
+              cols={30}
+              rows={10}
+            ></textarea>
+            <button className={styles.button}>Send</button>
+          </form>
+        </div>
+      </ClerkProvider>
+    </>
   );
 };
 

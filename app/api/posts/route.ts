@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/utils/db";
 import Post from "@/models/Post";
 
-export const GET = async (request) => {
+export async function GET(request: NextRequest) {
   const url = new URL(request.url);
 
   const username = url.searchParams.get("username");
@@ -12,13 +12,13 @@ export const GET = async (request) => {
 
     const posts = await Post.find(username? { username } : {});
 
-    return new NextResponse(JSON.stringify(posts), { status: 200 });
+    return NextResponse.json(JSON.stringify(posts), { status: 200 });
   } catch (err) {
-    return new NextResponse("Database Error", { status: 500 });
+    return NextResponse.json({ error: "Database Error" }, { status: 500 });
   }
 };
 
-export const POST = async (request) => {
+export async function POST(request: NextRequest) {
   const body = await request.json();
 
   const newPost = new Post(body);
@@ -28,8 +28,8 @@ export const POST = async (request) => {
 
     await newPost.save();
 
-    return new NextResponse("Post has been created", { status: 201 });
+    return NextResponse.json({ message: "Post has been created" }, { status: 201 });
   } catch (err) {
-    return new NextResponse("Database Error", { status: 500 });
+    return NextResponse.json({ error: "Database Error" }, { status: 500 });
   }
 };
